@@ -5,6 +5,8 @@ services:
             context: ./apps/ms-product
             dockerfile: Dockerfile
         restart: unless-stopped
+        volumes:
+            - ./apps/ms-product:/var/www/html
         tty: true
         networks:
             - app
@@ -13,6 +15,8 @@ services:
             context: ./apps/ms-photo
             dockerfile: Dockerfile
         restart: unless-stopped
+        volumes:
+            - ./apps/ms-photo:/var/www/html
         tty: true
         networks:
             - app
@@ -21,6 +25,8 @@ services:
             context: ./apps/ms-inventory
             dockerfile: Dockerfile
         restart: unless-stopped
+        volumes:
+            - ./apps/ms-inventory:/var/www/html
         tty: true
         networks:
             - app
@@ -29,6 +35,8 @@ services:
             context: ./apps/ms-review
             dockerfile: Dockerfile
         restart: unless-stopped
+        volumes:
+            - ./apps/ms-review:/var/www/html
         tty: true
         networks:
             - app
