@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 20);
-            $table->integer('category_id');
+            $table->foreignId('category_id')->constrained(
+                table: 'product_categories', indexName: 'products_category_id_foreign'
+            );
             $table->integer('price');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('status')->default(0)->comment('0: 正常, 1: 缺貨, 2: 下架');
             $table->string('description', 1000)->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });
