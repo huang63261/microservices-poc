@@ -8,6 +8,7 @@ RUN apk add --no-cache nginx supervisor envsubst
 # Install phpize
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && \
     apk add --no-cache freetype-dev libjpeg-turbo-dev libpng-dev libzip-dev bzip2-dev linux-headers && \
+    # apk add mysql-client && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-configure pcntl --enable-pcntl && \
     # Install gd zip bz2 bcmath pdo_mysql opcache sockets
