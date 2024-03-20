@@ -10,6 +10,8 @@ services:
         volumes:
             - ./apps/ms-product:/var/www/html
         tty: true
+        depends_on:
+            - mysql
         networks:
             - app
     photo:
@@ -20,6 +22,8 @@ services:
         volumes:
             - ./apps/ms-photo:/var/www/html
         tty: true
+        depends_on:
+            - mysql
         networks:
             - app
     inventory:
@@ -30,6 +34,8 @@ services:
         volumes:
             - ./apps/ms-inventory:/var/www/html
         tty: true
+        depends_on:
+            - mysql
         networks:
             - app
     review:
@@ -40,6 +46,8 @@ services:
         volumes:
             - ./apps/ms-review:/var/www/html
         tty: true
+        depends_on:
+            - mysql
         networks:
             - app
     nginx:
@@ -70,6 +78,8 @@ services:
             MYSQL_ROOT_PASSWORD: passwd
         depends_on:
             - mysql
+        networks:
+            - app
 
     mysql:
         image: 'mysql:8-oracle'
@@ -84,6 +94,8 @@ services:
             MYSQL_PASSWORD: rdrd
             MYSQL_DATABASE: poc_system
             MYSQL_ROOT_PASSWORD: passwd
+        networks:
+            - app
 
 networks:
     app:
