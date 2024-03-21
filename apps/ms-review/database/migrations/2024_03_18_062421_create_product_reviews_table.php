@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('customer_id', 20);
             $table->tinyInteger('rating');
             $table->string('content', 1000);
+            $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });
