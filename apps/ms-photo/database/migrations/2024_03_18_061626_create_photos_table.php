@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('product_id');
             $table->string('uri', 100);
+            $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });

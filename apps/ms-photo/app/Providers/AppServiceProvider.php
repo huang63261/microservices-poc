@@ -11,7 +11,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(\App\Services\Contracts\StorageService::class,\App\Services\LocalStorageService::class);
+        $this->app->bind(\App\Repositories\PhotoRepository::class,\App\Repositories\PhotoRepository::class);
     }
 
     /**
