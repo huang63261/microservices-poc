@@ -88,11 +88,12 @@ services:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
         volumes:
+            - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
             - mysql-data:/var/lib/mysql
         environment:
-            MYSQL_USER: rd
-            MYSQL_PASSWORD: rdrd
-            MYSQL_DATABASE: poc_system
+            MYSQL_USER: user
+            MYSQL_PASSWORD: passwd
+            MYSQL_DATABASE: user_system
             MYSQL_ROOT_PASSWORD: passwd
         networks:
             - app
