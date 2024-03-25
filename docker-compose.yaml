@@ -5,8 +5,6 @@ services:
             context: ./apps/ms-product
             dockerfile: Dockerfile
         restart: unless-stopped
-        # environment:
-        #     - DB_HOST=host.docker.internal
         volumes:
             - ./apps/ms-product:/var/www/html
         tty: true
@@ -50,6 +48,66 @@ services:
             - mysql
         networks:
             - app
+    order:
+        build:
+            context: ./apps/ms-order
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./apps/ms-order:/var/www/html
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app
+    payment:
+        build:
+            context: ./apps/ms-payment
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./apps/ms-payment:/var/www/html
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app
+    notification:
+        build:
+            context: ./apps/ms-notification
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./apps/ms-notification:/var/www/html
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app
+    bff:
+        build:
+            context: ./apps/backend-for-frontend
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./apps/backend-for-frontend:/var/www/html
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app
+    orchestrator:
+        build:
+            context: ./apps/orchestrator
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./apps/orchestrator:/var/www/html
+        tty: true
+        depends_on:
+            - mysql
+        networks:
+            - app
     nginx:
         image: nginx:alpine
         restart: unless-stopped
@@ -65,6 +123,11 @@ services:
             - photo
             - inventory
             - review
+            - order
+            - payment
+            - notification
+            - bff
+            - orchestrator
         networks:
             - app
 
