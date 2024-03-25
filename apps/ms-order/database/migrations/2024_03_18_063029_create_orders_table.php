@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('customer_id');
-            $table->tinyInteger('status');
+            $table->unsignedMediumInteger('total_price');
+            $table->tinyInteger('status')->default(0)->comment('0: 待處理, 1: 處理中, 2: 處理完成, 3: 取消');
             $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });

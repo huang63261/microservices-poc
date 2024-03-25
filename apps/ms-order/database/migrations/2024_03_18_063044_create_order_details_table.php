@@ -16,8 +16,10 @@ return new class extends Migration
             $table->integer('order_id');
             $table->integer('product_id');
             $table->string('product_name', 20)->comment('當時產品名稱');
-            $table->integer('price')->comment('當時產品價格');
-            $table->smallInteger('quantity');
+            $table->unsignedInteger('price')->comment('當時產品價格');
+            $table->unsignedSmallInteger('quantity');
+            $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });
