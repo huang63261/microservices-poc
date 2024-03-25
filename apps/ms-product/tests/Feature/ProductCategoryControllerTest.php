@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
-use App\Http\Controllers\ProductCategoryController;
 use App\Models\ProductCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
