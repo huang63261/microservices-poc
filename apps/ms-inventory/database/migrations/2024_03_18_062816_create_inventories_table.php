@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inventories', function (Blueprint $table) {
-            $table->id();
-            $table->smallInteger('locked_quantity')->default(0);
-            $table->smallInteger('available_quantity')->default(0);
-            $table->smallInteger('total_quantity')->default(0);
+            $table->id('product_id')->comment('FK: products.id');
+            $table->unsignedSmallInteger('locked_quantity')->default(0);
+            $table->unsignedSmallInteger('available_quantity')->default(0);
+            $table->unsignedMediumInteger('total_quantity')->default(0);
+            $table->dateTime('created_at')->nullable();
+            $table->string('created_by', 20)->nullable();
             $table->dateTime('updated_at')->nullable();
             $table->string('updated_by', 20)->nullable();
         });
