@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('product-reviews', \App\Http\Controllers\ProductReviewController::class)->only([
+Route::resource('product-reviews', \App\Http\Controllers\Api\ProductReviewController::class)->only([
     'index', 'store', 'show', 'update', 'destroy'
 ]);

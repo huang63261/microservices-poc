@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('photos', \App\Http\Controllers\PhotoController::class)->only([
+Route::resource('photos', \App\Http\Controllers\Api\PhotoController::class)->only([
     'index', 'store', 'show', 'update', 'destroy'
 ]);

@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Http\Controllers\Api\MailController;
 use App\Mail\OrderCompleted;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
