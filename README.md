@@ -15,7 +15,7 @@ This is a proof of concept for a microservice-based E-Shopping application. The 
 1. Clone the repository:
 
    ```shell
-      git clone <repo_url>
+      git clone git@github.com:huang63261/microservices-poc.git
    ```
 
 2. Run services setup script:
