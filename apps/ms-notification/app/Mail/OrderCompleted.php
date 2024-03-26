@@ -21,6 +21,14 @@ class OrderCompleted extends Mailable
     ) {}
 
     /**
+     * Get the order property.
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
      * Get the message envelope.
      */
     public function envelope(): Envelope

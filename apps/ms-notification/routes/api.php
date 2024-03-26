@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/mail', [\App\Http\Controllers\Api\MailController::class, 'mail']);
+Route::post('/mail', [\App\Http\Controllers\Api\MailController::class, 'mail'])->name('mail');
