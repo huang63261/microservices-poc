@@ -17,17 +17,39 @@ class PhotoController extends Controller
     ) {}
 
     /**
-     * Display a listing of the resource.
+     * Get list of photos.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
         $request->validate([
-            'product_id' => 'integer'
+            'product_id' => 'string'
         ]);
 
         $photos = $request->has('product_id')
             ? $this->photoRepository->findByProductId($request->product_id)
             : $this->photoRepository->all();
+
+        return response()->json($photos, Response::HTTP_OK);
+    }
+
+    /**
+     * Get photos by product ids.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPhotosBatch(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'integer'
+        ]);
+
+        $photos = $this->photoRepository->findByProductIds($request->input('product_ids'));
+        $photos = collect($photos)->groupBy('product_id')->toArray();
 
         return response()->json($photos, Response::HTTP_OK);
     }

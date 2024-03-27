@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('photos', \App\Http\Controllers\Api\PhotoController::class)->only([
-    'index', 'store', 'show', 'update', 'destroy'
-]);
+Route::get('/photos', [\App\Http\Controllers\Api\PhotoController::class, 'index'])->name('photos.index');
+Route::get('/photos/{photo}', [\App\Http\Controllers\Api\PhotoController::class, 'show'])->name('photos.show');
+Route::post('/photos/batch-loading', [\App\Http\Controllers\Api\PhotoController::class, 'getPhotosBatch'])->name('photos.batch-loading');
+Route::post('/photos', [\App\Http\Controllers\Api\PhotoController::class, 'store'])->name('photos.store');
+Route::put('/photos/{photo}', [\App\Http\Controllers\Api\PhotoController::class, 'update'])->name('photos.update');
+Route::delete('/photos/{photo}', [\App\Http\Controllers\Api\PhotoController::class, 'destroy'])->name('photos.destroy');
+

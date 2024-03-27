@@ -17,9 +17,26 @@ class InventoryController extends Controller
     /**
      * Display a listing of all Inventories.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->inventoryRepository->all();
+        $inventories = $request->has('product_id')
+            ? $this->inventoryRepository->findByProductId($request->input('product_id'))
+            : $this->inventoryRepository->all();
+
+        return response()->json($inventories);
+    }
+
+    public function getInventoriesBatch(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'integer',
+        ]);
+
+        $inventories = $this->inventoryRepository->findByProductIds($request->input('product_ids'));
+        $inventories = array_column($inventories, null, 'product_id');
+
+        return response()->json($inventories, Response::HTTP_OK);
     }
 
     /**
@@ -42,9 +59,9 @@ class InventoryController extends Controller
     /**
      * Display the specified Inventory.
      */
-    public function show(Inventory $inventory)
+    public function show(string $productId)
     {
-        return $this->inventoryRepository->find($inventory->product_id);
+        return $this->inventoryRepository->findByProductId($productId);
     }
 
     /**

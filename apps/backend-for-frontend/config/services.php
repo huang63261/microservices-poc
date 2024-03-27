@@ -31,4 +31,24 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ms_product' => [
+        'base_url' => env('MS_PRODUCT_END_POINT'),
+        'api_base_url' => env('MS_PRODUCT_API_BASE_URL'),
+    ],
+
+    'ms_review' => [
+        'base_url' => env('MS_REVIEW_END_POINT'),
+        'api_base_url' => env('MS_REVIEW_API_BASE_URL'),
+    ],
+
+    'ms_photo' => [
+        'base_url' => env('MS_PHOTO_END_POINT'),
+        'api_base_url' => env('MS_PHOTO_API_BASE_URL'),
+    ],
+
+    'ms_inventory' => [
+        'base_url' => env('MS_INVENTORY_END_POINT'),
+        'api_base_url' => env('MS_INVENTORY_API_BASE_URL'),
+    ],
+
 ];

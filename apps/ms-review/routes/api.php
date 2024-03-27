@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('product-reviews', \App\Http\Controllers\Api\ProductReviewController::class)->only([
-    'index', 'store', 'show', 'update', 'destroy'
-]);
+Route::get('/product-reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'index'])->name('product-reviews.index');
+Route::get('/product-reviews/{productReview}', [\App\Http\Controllers\Api\ProductReviewController::class, 'show'])->name('product-reviews.show');
+Route::post('/product-reviews/batch-loading', [\App\Http\Controllers\Api\ProductReviewController::class, 'getReviewsBatch'])->name('product-reviews.batch');
+Route::post('/product-reviews', [\App\Http\Controllers\Api\ProductReviewController::class, 'store'])->name('product-reviews.store');
+Route::put('/product-reviews/{productReview}', [\App\Http\Controllers\Api\ProductReviewController::class, 'update'])->name('product-reviews.update');
+Route::delete('/product-reviews/{productReview}', [\App\Http\Controllers\Api\ProductReviewController::class, 'destroy'])->name('product-reviews.destroy');

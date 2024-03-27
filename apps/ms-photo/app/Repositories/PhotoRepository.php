@@ -20,7 +20,7 @@ class PhotoRepository
         return $this->photo->create($data);
     }
 
-    public function find(int|string $id)
+    public function find(string $id)
     {
         return $this->photo->find($id);
     }
@@ -36,7 +36,18 @@ class PhotoRepository
             ->toArray();
     }
 
-    public function update(int|string $id, array $data)
+    /**
+     * @param array $productIds
+     * @return array
+     */
+    public function findByProductIds(array $productIds)
+    {
+        return $this->photo->whereIn('product_id', $productIds)
+            ->get()
+            ->toArray();
+    }
+
+    public function update(string $id, array $data)
     {
         if (!$this->photo->where('id', $id)->update($data)) {
             return false;
@@ -45,7 +56,7 @@ class PhotoRepository
         return $this->photo->find($id);
     }
 
-    public function delete(int|string $id)
+    public function delete(string $id)
     {
         return $this->photo->destroy($id);
     }

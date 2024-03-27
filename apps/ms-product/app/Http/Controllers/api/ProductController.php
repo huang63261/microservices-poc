@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,14 +21,19 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $request->validate([
+            'per_page' => 'integer',
+            'name' => 'string',
+            'category_id' => 'integer',
+            'status' => 'array',
+            'status.*' => 'integer|in:0,1,2',
+        ]);
+
         $products = $this->ProductRepository->all(
-            ...$request->validate([
-                'perPage' => 'integer',
-                'name' => 'string',
-                'category_id' => 'integer',
-                'status' => 'array',
-                'status.*' => 'integer|in:0,1,2',
-            ])
+            perPage: $request->input('per_page'),
+            name: $request->input('name'),
+            categoryId: $request->input('category_id'),
+            status: $request->input('status'),
         );
 
         return new ProductCollection($products);
@@ -48,7 +54,7 @@ class ProductController extends Controller
             ])
         ]);
 
-        return response()->json($product, Response::HTTP_CREATED);
+        return new ProductResource($product);
     }
 
     /**
@@ -56,7 +62,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     /**
@@ -78,7 +84,7 @@ class ProductController extends Controller
             return response()->json(['message' => 'Update failed'], Response::HTTP_BAD_REQUEST);
         }
 
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     /**

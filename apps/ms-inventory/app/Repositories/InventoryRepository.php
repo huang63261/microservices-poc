@@ -15,9 +15,17 @@ class InventoryRepository
         return $this->inventory->all();
     }
 
-    public function find(int|string $product_id)
+    public function findByProductIds(array $productId)
     {
-        return $this->inventory->find($product_id);
+        return $this->inventory
+            ->whereIn('product_id', $productId)
+            ->get()
+            ->toArray();
+    }
+
+    public function findByProductId(string $productId)
+    {
+        return $this->inventory->find($productId);
     }
 
     public function create(array $data)
@@ -31,9 +39,9 @@ class InventoryRepository
         return $inventory;
     }
 
-    public function update(int|string $product_id, array $data)
+    public function update(string $productId, array $data)
     {
-        $inventory = $this->inventory->find($product_id);
+        $inventory = $this->inventory->find($productId);
         if (!$inventory->update($data)) {
             return false;
         }
@@ -41,8 +49,8 @@ class InventoryRepository
         return $inventory;
     }
 
-    public function delete(int|string $product_id)
+    public function delete(string $productId)
     {
-        return $this->inventory->destroy($product_id);
+        return $this->inventory->destroy($productId);
     }
 }

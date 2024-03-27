@@ -36,7 +36,18 @@ class ProductReviewRepository
      */
     public function findByProductId($productId)
     {
-        return $this->productReview->where('product_id', $productId)->get()->toArray();
+        return $this->productReview
+            ->where('product_id', $productId)
+            ->get()
+            ->toArray();
+    }
+
+    public function findByProductIds(array $productIds)
+    {
+        return $this->productReview
+            ->whereIn('product_id', $productIds)
+            ->get()
+            ->toArray();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductReviewResource;
 use App\Repositories\ProductReviewRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,13 +21,30 @@ class ProductReviewController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'product_id' => 'integer',
-        ]);
-
         $productReviews = $request->has('product_id')
             ? $this->productReviewRepository->findByProductId($request->input('product_id'))
             : $this->productReviewRepository->all();
+
+        return response()->json($productReviews);
+    }
+
+    /**
+     * Get product reviews by product IDs.
+     *
+     * @param Request $request The HTTP request.
+     * @return \Illuminate\Http\JsonResponse The JSON response containing the product reviews.
+     */
+    public function getReviewsBatch(Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'integer',
+        ]);
+
+        $productReviews = $this->productReviewRepository->findByProductIds($request->input('product_ids'));
+        $productReviews = collect($productReviews)->groupBy('product_id')->toArray();
+
+        ksort($productReviews);
 
         return response()->json($productReviews);
     }

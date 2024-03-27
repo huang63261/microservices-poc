@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('inventories', \App\Http\Controllers\Api\InventoryController::class)->only([
-    'index', 'store', 'show', 'update', 'destroy'
-]);
+Route::get('/inventories', [\App\Http\Controllers\Api\InventoryController::class, 'index'])->name('inventories.index');
+Route::get('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'show'])->name('inventories.show');
+Route::post('/inventories/batch-loading', [\App\Http\Controllers\Api\InventoryController::class, 'getInventoriesBatch'])->name('inventories.batch-loading');
+Route::post('/inventories', [\App\Http\Controllers\Api\InventoryController::class, 'store'])->name('inventories.store');
+Route::put('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'update'])->name('inventories.update');
+Route::delete('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'destroy'])->name('inventories.destroy');
