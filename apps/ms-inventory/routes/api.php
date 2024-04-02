@@ -14,9 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/inventories', [\App\Http\Controllers\Api\InventoryController::class, 'index'])->name('inventories.index');
-Route::get('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'show'])->name('inventories.show');
-Route::post('/inventories/batch-loading', [\App\Http\Controllers\Api\InventoryController::class, 'getInventoriesBatch'])->name('inventories.batch-loading');
-Route::post('/inventories', [\App\Http\Controllers\Api\InventoryController::class, 'store'])->name('inventories.store');
-Route::put('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'update'])->name('inventories.update');
-Route::delete('/inventories/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'destroy'])->name('inventories.destroy');
+Route::prefix('/inventories')->group(function() {
+    Route::get('/', [\App\Http\Controllers\Api\InventoryController::class, 'index'])->name('inventories.index');
+    Route::get('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'show'])->name('inventories.show');
+    Route::post('/batch-loading', [\App\Http\Controllers\Api\InventoryController::class, 'getInventoriesBatch'])->name('inventories.batch-loading');
+    Route::post('/', [\App\Http\Controllers\Api\InventoryController::class, 'store'])->name('inventories.store');
+    Route::put('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'update'])->name('inventories.update');
+    Route::delete('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'destroy'])->name('inventories.destroy');
+});
+
+Route::post('inventories/check-availability', [\App\Http\Controllers\Api\InventoryCheckController::class, 'checkAvailability'])
+    ->name('inventories.check-availability');
+
+Route::get('/test', [\App\Http\Controllers\Api\TestController::class, 'index']);
