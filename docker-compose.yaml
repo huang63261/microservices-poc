@@ -190,8 +190,30 @@ services:
         networks:
             - app
 
+    workspace:
+        build:
+            context: ./docker/workspace
+            dockerfile: Dockerfile
+        volumes:
+            - ./apps/ms-product:/workspace/apps/ms-product
+            - ./apps/ms-photo:/workspace/apps/ms-photo
+            - ./apps/ms-inventory:/workspace/apps/ms-inventory
+            - ./apps/ms-review:/workspace/apps/ms-review
+            - ./apps/ms-order:/workspace/apps/ms-order
+            - ./apps/ms-payment:/workspace/apps/ms-payment
+            - ./apps/ms-notification:/workspace/apps/ms-notification
+            - ./apps/backend-for-frontend:/workspace/apps/backend-for-frontend
+            - ./apps/orchestrator:/workspace/apps/orchestrator
+            - ./setup-services.sh:/workspace/setup-services.sh
+        working_dir: /workspace
+        command: bash
+        networks:
+            - app
+
+
 networks:
     app:
         driver: bridge
 volumes:
     mysql-data: null
+    rabbitmq_data: null
