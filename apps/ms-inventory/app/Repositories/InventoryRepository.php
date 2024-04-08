@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Inventory;
+use Illuminate\Support\Facades\DB;
 
 class InventoryRepository
 {
@@ -52,5 +53,23 @@ class InventoryRepository
     public function delete(string $productId)
     {
         return $this->inventory->destroy($productId);
+    }
+
+    public function lockInventory(string $productId, int $quantity)
+    {
+        try {
+            DB::beginTransaction();
+
+            $this->inventory->where('product_id', $productId)
+                ->decrement('available_quantity', $quantity);
+
+            $this->inventory->where('product_id', $productId)
+                ->increment('locked_quantity', $quantity);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
     }
 }

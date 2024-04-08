@@ -53,4 +53,20 @@ class InventoryService
 
         return $response;
     }
+
+    /**
+     * Lock the inventory for the products.
+     *
+     * @param array<array><string,int> $items
+     * @return void
+     */
+    public function lockInventory(array $items)
+    {
+        foreach ($items as $item) {
+            $productId = $item['product_id'];
+            $quantity = $item['quantity'];
+
+            $this->inventoryRepository->lockInventory($productId, $quantity);
+        }
+    }
 }
