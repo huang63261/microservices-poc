@@ -29,10 +29,7 @@ class PhotoService extends AbstractHttpRequest
             method:'POST',
             url:'/photos/batch-loading',
             options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-                'form_params' => [
+                'json' => [
                     'product_ids' => $productIds
                 ]
             ],
