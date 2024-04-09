@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/inventory-lock', [App\Http\Controllers\Api\TestController::class, 'inventoryLock']);
+
+Route::post('/checkout', [App\Http\Controllers\Api\CheckOutController::class, 'checkoutProcess']);
+Route::post('/payment', [App\Http\Controllers\Api\CheckOutController::class, 'paymentProcess']);

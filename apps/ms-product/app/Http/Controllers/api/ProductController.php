@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
 class ProductController extends Controller
 {
     public function __construct(
-        protected ProductRepository $ProductRepository
+        protected ProductRepository $productRepository
     ){}
 
     /**
@@ -22,21 +22,13 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'per_page' => 'integer',
-            'name' => 'string',
-            'category_id' => 'integer',
-            'status' => 'array',
-            'status.*' => 'integer|in:0,1,2',
+            'product_id' => 'array',
         ]);
 
-        $products = $this->ProductRepository->all(
-            perPage: $request->input('per_page'),
-            name: $request->input('name'),
-            categoryId: $request->input('category_id'),
-            status: $request->input('status'),
-        );
+        $products = $this->productRepository
+            ->findManyByIds($request->input('product_id'));
 
-        return new ProductCollection($products);
+        return $products;
     }
 
     /**
@@ -44,7 +36,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = $this->ProductRepository->create([
+        $product = $this->productRepository->create([
             ...$request->validate([
                 'name' => 'required|string',
                 'category_id' => 'required|integer|exists:product_categories,id',
@@ -70,7 +62,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product = $this->ProductRepository->update($product->id, [
+        $product = $this->productRepository->update($product->id, [
             ...$request->validate([
                 'name' => 'string',
                 'category_id' => 'integer|exists:product_categories,id',
@@ -92,7 +84,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->ProductRepository->delete($product->id);
+        $this->productRepository->delete($product->id);
 
         return response()->noContent();
     }

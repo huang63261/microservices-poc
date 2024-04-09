@@ -39,6 +39,11 @@ class ProductRepository
         return $this->product->find($id);
     }
 
+    public function findManyByIds(array $ids)
+    {
+        return $this->product->whereIn('id', $ids)->get();
+    }
+
     public function update(int $id, array $data)
     {
         if (!$this->product->where('id', $id)->update($data)) {

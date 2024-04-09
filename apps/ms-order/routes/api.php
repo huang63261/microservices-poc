@@ -18,4 +18,4 @@ Route::resource('orders', \App\Http\Controllers\Api\OrderController::class)
     ->only(['index', 'store', 'show', 'update', 'destroy']);
 
 Route::resource('order-details', \App\Http\Controllers\Api\OrderDetailController::class)
-    ->only(['index', 'store', 'show', 'update', 'destroy']);
+    ->only(['index', 'show']);

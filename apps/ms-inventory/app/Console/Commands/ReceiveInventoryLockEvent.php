@@ -6,7 +6,7 @@ use App\Services\InventoryService;
 use App\Services\RabbitMQService;
 use Illuminate\Console\Command;
 
-class ReceiveInventoryLock extends Command
+class ReceiveInventoryLockEvent extends Command
 {
     public function __construct(
         protected InventoryService $inventoryService
@@ -19,14 +19,14 @@ class ReceiveInventoryLock extends Command
      *
      * @var string
      */
-    protected $signature = 'app:receive-inventory-lock';
+    protected $signature = 'app:receive-inventory-lock-event';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Receive inventory lock event from RabbitMQ';
+    protected $description = 'To consume inventory lock event from RabbitMQ, and lock the inventory.';
 
     /**
      * Execute the console command.

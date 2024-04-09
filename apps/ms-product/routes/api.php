@@ -14,4 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::resource('/products', \App\http\Controllers\Api\ProductController::class);
+Route::get('/products-browse', [\App\http\Controllers\Api\BrowseController::class, 'index']);
 Route::resource('/product-categories', \App\http\Controllers\Api\ProductCategoryController::class);
+Route::post('/pricing', [\App\http\Controllers\Api\PricingController::class, 'pricing']);

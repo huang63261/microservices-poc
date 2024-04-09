@@ -64,27 +64,6 @@ class OrderDetailControllerTest extends TestCase
             ]);
     }
 
-    /**
-     * Test the store method.
-     */
-    public function test_store_method_creates_a_new_order_detail()
-    {
-        $data = [
-            'order_id' => $this->faker->numberBetween(1, 10),
-            'product_id' => $this->faker->numberBetween(1, 10),
-            'product_name' => $this->faker->word,
-            'price' => $this->faker->numberBetween(100, 1000),
-            'quantity' => $this->faker->numberBetween(1, 10),
-        ];
-
-        $this->post(route('order-details.store'), $data)
-            ->assertStatus(Response::HTTP_CREATED)
-            ->assertJson([
-                'data' => $data,
-            ]);
-
-        $this->assertDatabaseHas('order_details', $data);
-    }
 
     /**
      * Test the show method.
@@ -106,40 +85,5 @@ class OrderDetailControllerTest extends TestCase
                     'quantity' => $orderDetail->quantity,
                 ],
             ]);
-    }
-
-    /**
-     * Test the update method.
-     */
-    public function test_update()
-    {
-        $orderDetail = OrderDetail::factory()->create();
-
-        $data = [
-            'order_id' => $this->faker->numberBetween(1, 10),
-            'product_id' => $this->faker->numberBetween(1, 10),
-            'product_name' => $this->faker->word,
-            'price' => $this->faker->numberBetween(100, 1000),
-            'quantity' => $this->faker->numberBetween(1, 10),
-        ];
-
-        $this->put(route('order-details.update', $orderDetail->id), $data)
-            ->assertStatus(Response::HTTP_OK)
-            ->assertJson([
-                'data' => $data,
-            ]);
-    }
-
-    /**
-     * Test the destroy method.
-     */
-    public function test_destroy()
-    {
-        $orderDetail = OrderDetail::factory()->create();
-
-        $this->delete(route('order-details.destroy', $orderDetail->id))
-            ->assertNoContent();
-
-        $this->assertDatabaseMissing('order_details', ['id' => $orderDetail->id]);
     }
 }

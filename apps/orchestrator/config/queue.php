@@ -71,6 +71,31 @@ return [
             'after_commit' => false,
         ],
 
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'queue' => env('RABBITMQ_QUEUE', 'default'),
+            'hosts' => [
+                [
+                    'host' => env('RABBITMQ_HOST', '127.0.0.1'),
+                    'port' => env('RABBITMQ_PORT', 5672),
+                    'user' => env('RABBITMQ_USER', 'guest'),
+                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
+                    'vhost' => env('RABBITMQ_VHOST', '/'),
+                ],
+            ],
+            'options' => [
+                'queue' => [
+                    // 'job' => VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Jobs\RabbitMQJob::class,
+                    'exchange' => env('RABBITMQ_EXCHANGE_NAME'),
+                    'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
+                    'exchange_durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
+                    'exchange_auto_delete' => env('RABBITMQ_EXCHANGE_AUTO_DELETE', false),
+                    'exchange_arguments' => [],
+                    'queue_arguments' => ['x-queue-type' => ['S', 'classic']],
+                ],
+            ],
+        ],
+
     ],
 
     /*
@@ -82,7 +107,7 @@ return [
     | batching information. These options can be updated to any database
     | connection and table which has been defined by your application.
     |
-    */
+     */
 
     'batching' => [
         'database' => env('DB_CONNECTION', 'mysql'),
@@ -98,7 +123,7 @@ return [
     | can control which database and table are used to store the jobs that
     | have failed. You may change them to any database / table you wish.
     |
-    */
+     */
 
     'failed' => [
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),

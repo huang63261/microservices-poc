@@ -31,4 +31,23 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'ms_inventory' => [
+        'base_url' => env('MS_INVENTORY_END_POINT'),
+        'api_base_url' => env('MS_INVENTORY_API_BASE_URL'),
+    ],
+
+    'ms_payment' => [
+        'base_url' => env('MS_PAYMENT_END_POINT'),
+        'api_base_url' => env('MS_PAYMENT_API_BASE_URL'),
+    ],
+
+    'ms_order' => [
+        'base_url' => env('MS_ORDER_END_POINT'),
+        'api_base_url' => env('MS_ORDER_API_BASE_URL'),
+    ],
+
+    'ms_product' => [
+        'base_url' => env('MS_PRODUCT_END_POINT'),
+        'api_base_url' => env('MS_PRODUCT_API_BASE_URL'),
+    ],
 ];

@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     public function __construct(
-        protected OrderRepository $orderRepository
+        protected OrderRepository $orderRepository,
+        protected OrderService $orderService
     ) {}
 
     /**
@@ -36,10 +39,15 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         return new OrderResource(
-            $this->orderRepository->create(
+            $this->orderService->createOrder(
                 $request->validate([
                     'customer_id' => 'required|integer',
                     'total_price' => 'required|numeric',
+                    'items' => 'required|array',
+                    'items.*.product_id' => 'required|integer',
+                    'items.*.product_name' => 'required|string',
+                    'items.*.quantity' => 'required|integer',
+                    'items.*.price' => 'required|numeric',
                 ])
             )
         );
@@ -61,8 +69,9 @@ class OrderController extends Controller
         $order = $this->orderRepository->update(
             $order->id,
             $request->validate([
-                'customer_id' => 'required|integer',
-                'total_price' => 'required|numeric',
+                'customer_id' => 'integer',
+                'total_price' => 'numeric',
+                'status' => 'string',
             ])
         );
 
