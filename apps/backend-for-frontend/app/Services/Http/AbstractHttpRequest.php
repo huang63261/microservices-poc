@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use JsonException;
 
 abstract class AbstractHttpRequest
@@ -69,6 +70,15 @@ abstract class AbstractHttpRequest
     public function send(string $method, string $uri, array $options = [], array $queryParams = [])
     {
         try {
+            $defaultOptions = [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+            ];
+
+            $options = array_merge($defaultOptions, $options);
+
             if (!empty($queryParams)) {
                 $uri .= '?' . http_build_query($queryParams);
             }
@@ -99,6 +109,8 @@ abstract class AbstractHttpRequest
             'message' => $message,
         ];
 
-        throw new Exception(json_encode($message), $code);
+        Log::error('Error: ' . json_encode($message));
+
+        throw new Exception(json_encode($message), Response::HTTP_BAD_REQUEST);
     }
 }
