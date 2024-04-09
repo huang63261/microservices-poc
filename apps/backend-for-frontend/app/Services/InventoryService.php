@@ -31,11 +31,6 @@ class InventoryService extends AbstractHttpRequest
         $inventory = $this->send(
             method:'GET',
             uri:"/inventories/{$productId}",
-            options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]
         );
 
         return $inventory;

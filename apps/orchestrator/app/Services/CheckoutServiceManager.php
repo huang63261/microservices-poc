@@ -54,7 +54,7 @@ class CheckoutServiceManager
 
             return $order;
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
     }
 
@@ -67,27 +67,31 @@ class CheckoutServiceManager
      */
     public function payment($orderId, $paymentMethod)
     {
-        $order = $this->orderService->getOrderById($orderId);
+        try {
+            $order = $this->orderService->getOrderById($orderId);
 
-        if ($order['status'] === 2) {
-            throw new \Exception('Order is already completed');
+            if ($order['status'] === 2) {
+                throw new \Exception('Order is already completed');
+            }
+
+            $paymentData = [
+                'order_id' => $orderId,
+                'amount' => $order['total_price'],
+                'payment_method' => $paymentMethod,
+            ];
+
+            $payment = $this->paymentService->processPayment($paymentData);
+
+            // Change the order status to 'completed'
+            if ($payment['code'] === 200) {
+                // todo What if the order update fails?
+                $order = $this->orderService->updateOrder($order['id'], ['status' => '2']);
+                RabbitMQService::sendOrderCompletedEvent($order);
+            }
+
+            return $payment;
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
-
-        $paymentData = [
-            'order_id' => $orderId,
-            'amount' => $order['total_price'],
-            'payment_method' => $paymentMethod
-        ];
-
-        $payment = $this->paymentService->processPayment($paymentData);
-
-        // Change the order status to 'completed'
-        if ($payment['code'] === 200) {
-            // todo What if the order update fails?
-            $order = $this->orderService->updateOrder($order['id'], ['status' => '2']);
-            RabbitMQService::sendOrderCompletedEvent($order);
-        }
-
-        return $payment;
     }
 }

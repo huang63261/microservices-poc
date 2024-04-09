@@ -15,12 +15,7 @@ class ProductService extends AbstractHttpRequest
     {
         return $this->send(
             method:'GET',
-            uri:'/products',
-            options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ],
+            uri:'/products-browse',
             queryParams: $queryParams
         );
     }
@@ -30,11 +25,6 @@ class ProductService extends AbstractHttpRequest
         return $this->send(
             method:'GET',
             uri:"/products/{$productId}",
-            options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]
         );
     }
 }

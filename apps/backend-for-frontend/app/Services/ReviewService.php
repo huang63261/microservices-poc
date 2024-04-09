@@ -31,11 +31,6 @@ class ReviewService extends AbstractHttpRequest
         $reviews = $this->http->send(
             method:'GET',
             url:"/product-reviews?product_id={$productId}",
-            options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ]
         )->json();
 
         return $reviews;

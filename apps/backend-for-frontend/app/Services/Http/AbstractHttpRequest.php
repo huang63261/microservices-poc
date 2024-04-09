@@ -2,9 +2,8 @@
 
 namespace App\Services\Http;
 
-use Exception;
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use JsonException;
@@ -85,11 +84,12 @@ abstract class AbstractHttpRequest
 
             $response = $this->getHttp()->send($method, $uri, $options);
 
-            if ($response->failed()) {
-                $this->standardErrorResponse($response->getStatusCode(), $response->json()['message'] ?? '');
-            }
+        } catch (\Exception $e) {
+            $this->standardErrorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Exception: ' . $e->getMessage());
         } catch (ClientException $e) {
-            $this->standardErrorResponse($e->getCode(), $e->getMessage());
+            $this->standardErrorResponse($e->getCode(), 'Client Error: ' . $e->getMessage());
+        } catch (ServerException $e) {
+            $this->standardErrorResponse($e->getCode(), 'Server Error: ' . $e->getMessage(), true);
         }
 
         return $this->decodeBody($response);
@@ -100,17 +100,22 @@ abstract class AbstractHttpRequest
      *
      * @param int $code
      * @param string $message
-     * @throws Exception
+     * @param bool $externalError
+     * @throws \Exception
      */
-    public function standardErrorResponse($code = 400, $message = '')
+    protected function standardErrorResponse($code = 400, $message = '', $externalError = false)
     {
         $message = [
             'code' => $code,
             'message' => $message,
         ];
 
-        Log::error('Error: ' . json_encode($message));
+        Log::error(json_encode($message));
 
-        throw new Exception(json_encode($message), Response::HTTP_BAD_REQUEST);
+        if ($externalError) {
+            throw new \Exception(json_encode($message), Response::HTTP_OK);
+        }
+
+        throw new \Exception(json_encode($message), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

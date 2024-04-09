@@ -21,11 +21,12 @@ class ProductController extends Controller
     {
         try {
             return $this->productServiceManager
-            ->getAllProducts($request->all());
+                ->getAllProducts($request->all());
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => json_decode($e->getMessage())
-            ], Response::HTTP_OK);
+            return response()->json(
+                json_decode($e->getMessage())
+                , $e->getCode()
+            );
         }
     }
 
@@ -47,8 +48,9 @@ class ProductController extends Controller
                 ->getProductsConcurrently($id);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => json_decode($e->getMessage())
-            ], Response::HTTP_OK);
+                'code' => $e->getCode(),
+                'message' => json_decode($e->getMessage())
+            ], $e->getCode());
         }
     }
 

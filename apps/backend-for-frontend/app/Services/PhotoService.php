@@ -45,11 +45,6 @@ class PhotoService extends AbstractHttpRequest
         $response = $this->http->send(
             method:'GET',
             url:"/photos?product_id={$productId}",
-            options: [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
-            ],
         );
 
         $photos = $response->json();
