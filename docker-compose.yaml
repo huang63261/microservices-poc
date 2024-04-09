@@ -207,18 +207,18 @@ services:
         build:
             context: ./docker/workspace
             dockerfile: Dockerfile
+        working_dir: ${WORKSPACE_WORKDIR}
         volumes:
-            - ./apps/ms-product:/workspace/apps/ms-product
-            - ./apps/ms-photo:/workspace/apps/ms-photo
-            - ./apps/ms-inventory:/workspace/apps/ms-inventory
-            - ./apps/ms-review:/workspace/apps/ms-review
-            - ./apps/ms-order:/workspace/apps/ms-order
-            - ./apps/ms-payment:/workspace/apps/ms-payment
-            - ./apps/ms-notification:/workspace/apps/ms-notification
-            - ./apps/backend-for-frontend:/workspace/apps/backend-for-frontend
-            - ./apps/orchestrator:/workspace/apps/orchestrator
-            - ./setup-services.sh:/workspace/setup-services.sh
-        working_dir: /workspace
+            - ./apps/ms-product:${WORKSPACE_WORKDIR}/apps/ms-product
+            - ./apps/ms-photo:${WORKSPACE_WORKDIR}/apps/ms-photo
+            - ./apps/ms-inventory:${WORKSPACE_WORKDIR}/apps/ms-inventory
+            - ./apps/ms-review:${WORKSPACE_WORKDIR}/apps/ms-review
+            - ./apps/ms-order:${WORKSPACE_WORKDIR}/apps/ms-order
+            - ./apps/ms-payment:${WORKSPACE_WORKDIR}/apps/ms-payment
+            - ./apps/ms-notification:${WORKSPACE_WORKDIR}/apps/ms-notification
+            - ./apps/backend-for-frontend:${WORKSPACE_WORKDIR}/apps/backend-for-frontend
+            - ./apps/orchestrator:${WORKSPACE_WORKDIR}/apps/orchestrator
+            - ./setup-services.sh:${WORKSPACE_WORKDIR}/setup-services.sh
         command: bash
         networks:
             - app
