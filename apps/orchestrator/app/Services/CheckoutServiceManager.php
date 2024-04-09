@@ -25,7 +25,11 @@ class CheckoutServiceManager
             $checkResult = $this->inventoryService->checkProductInventory($items);
 
             if ($checkResult['is_available'] === 0) {
-                throw new \Exception($checkResult['detail']);
+                throw new \Exception(
+                    json_encode([
+                        'code' => '400',
+                        'message' => $checkResult['detail']
+                    ]), 200);
             }
 
             // Lock the inventory

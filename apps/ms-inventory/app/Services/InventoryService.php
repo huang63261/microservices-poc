@@ -34,6 +34,13 @@ class InventoryService
             foreach ($items as $item) {
                 $productId = $item['product_id'];
                 $requiredQuantity = $item['quantity'];
+
+                // Check if the product has any inventory
+                if ($inventories[$productId] === null || empty($inventories[$productId])) {
+                    $insufficientCollect[] = "Product ID: {$productId} doen't have any inventory.";
+                };
+
+                // Check if the product has enough quantity
                 $inventory = $inventories[$productId];
 
                 if ($inventory['available_quantity'] < $requiredQuantity) {
