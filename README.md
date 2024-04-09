@@ -18,20 +18,32 @@ This is a proof of concept for a microservice-based E-Shopping application. The 
       git clone git@github.com:huang63261/microservices-poc.git
    ```
 
-2. Run services setup script:
-   1. For `windows`, run the command:
+2. Copy environment file:
 
-      ```shell
-      .\setup_services.ps1
-      ```
+   ```shell
+      cp .env.example .env
+   ```
 
-   2. For `Unix/Linux/macOS`, run the command:
+3. Install services by using the utility container `workspace`:
 
-      ```shell
-      ./setup_services.sh
-      ```
+   1. Entering `workspace` container
 
-3. To run the application, run the command:
+   ```shell
+      docker compose run workspace bash
+   ```
+
+    **For `windows` user, you may encounter a problem caused by the Line Feed in shell script. If you use vscode as your editor, please search the text "CRLF" at right bottom, and change it into LF**
+
+   2. Run setup shell script:
+
+   ```shell
+      sh setup-services.sh
+   ```
+
+   3. Exit `workspace` container after finishing shell script.
+
+
+4. To run the application, run the command:
 
       ```shell
       docker compose up -d
