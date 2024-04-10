@@ -84,6 +84,9 @@ abstract class AbstractHttpRequest
 
             $response = $this->getHttp()->send($method, $uri, $options);
 
+            if ($response->failed()) {
+                $this->standardErrorResponse($response->status(), 'Service Error:' . $response->json()['message'] ?? $response->body());
+            }
         } catch (\Exception $e) {
             $this->standardErrorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Exception: ' . $e->getMessage());
         } catch (ClientException $e) {
@@ -113,7 +116,7 @@ abstract class AbstractHttpRequest
         Log::error(json_encode($message));
 
         if ($externalError) {
-            throw new \Exception(json_encode($message), Response::HTTP_OK);
+            throw new \Exception(json_encode($message), Response::HTTP_BAD_REQUEST);
         }
 
         throw new \Exception(json_encode($message), Response::HTTP_INTERNAL_SERVER_ERROR);
