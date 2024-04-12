@@ -29,7 +29,7 @@ This is a proof of concept for a microservice-based E-Shopping application. The 
    1. Entering `workspace` container
 
    ```shell
-      docker compose run workspace bash
+      docker compose run -it --rm workspace
    ```
 
     **For `windows` user, you may encounter a problem caused by the Line Feed in shell script. If you use vscode as your editor, please search the text "CRLF" at right bottom, and change it into LF**
