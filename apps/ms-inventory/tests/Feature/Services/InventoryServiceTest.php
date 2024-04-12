@@ -17,6 +17,7 @@ class InventoryServiceTest extends TestCase
             ['product_id' => 2, 'quantity' => 3],
         ];
 
+        // Mock the InventoryRepository
         $inventoryRepository = $this->createMock(InventoryRepository::class);
         $inventoryRepository->expects($this->once())
             ->method('findByProductIds')
@@ -46,6 +47,7 @@ class InventoryServiceTest extends TestCase
             ['product_id' => 2, 'quantity' => 3],
         ];
 
+        // Mock the InventoryRepository
         $inventoryRepository = $this->createMock(InventoryRepository::class);
         $inventoryRepository->expects($this->once())
             ->method('findByProductIds')
@@ -57,11 +59,13 @@ class InventoryServiceTest extends TestCase
 
         $inventoryService = new InventoryService($inventoryRepository);
 
-        // Assert
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Product ID: 1 is insufficient. Available Quantity: 1, Product ID: 2 is insufficient. Available Quantity: 2');
-
         // Act
-        $inventoryService->checkInventory($items);
+        $response = $inventoryService->checkInventory($items);
+
+        // Assert
+        $this->assertEquals([
+            'is_available' => 0,
+            'detail' => 'Product ID: 1 is insufficient. Available Quantity: 1, Product ID: 2 is insufficient. Available Quantity: 2',
+        ], $response);
     }
 }
