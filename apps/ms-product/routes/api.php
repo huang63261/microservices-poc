@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::resource('/products', \App\http\Controllers\Api\ProductController::class);
-Route::get('/products-browse', [\App\http\Controllers\Api\BrowseController::class, 'index']);
-Route::resource('/product-categories', \App\http\Controllers\Api\ProductCategoryController::class);
-Route::post('/pricing', [\App\http\Controllers\Api\PricingController::class, 'pricing']);
+Route::resource('/products', \App\Http\Controllers\Api\ProductController::class);
+Route::get('/products-browse', [\App\Http\Controllers\Api\BrowseController::class, 'index']);
+Route::resource('/product-categories', \App\Http\Controllers\Api\ProductCategoryController::class);
+Route::post('/pricing', [\App\Http\Controllers\Api\PricingController::class, 'pricing']);
