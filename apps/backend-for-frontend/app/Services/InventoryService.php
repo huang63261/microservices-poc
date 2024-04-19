@@ -2,18 +2,20 @@
 
 namespace App\Services;
 
-use App\Services\Http\AbstractHttpRequest;
+use App\Services\Http\HttpRequest;
 use Illuminate\Support\Facades\Http;
 
-class InventoryService extends AbstractHttpRequest
+class InventoryService
 {
+    protected HttpRequest $client;
+
     public function __construct() {
-        $this->http = Http::inventory();
+        $this->client = new HttpRequest(Http::inventory());
     }
 
     public function getInventoryOfProducts(array $productIds = [])
     {
-        $inventories = $this->send(
+        $inventories = $this->client->send(
             method:'POST',
             uri:'/inventories/batch-loading',
             options: [
@@ -28,7 +30,7 @@ class InventoryService extends AbstractHttpRequest
 
     public function getInventoryOfProduct(string $productId)
     {
-        $inventory = $this->send(
+        $inventory = $this->client->send(
             method:'GET',
             uri:"/inventories/{$productId}",
         );

@@ -2,32 +2,22 @@
 
 namespace App\Services;
 
-use App\Services\Http\AbstractHttpRequest;
+use App\Services\Http\HttpRequest;
 use Illuminate\Support\Facades\Http;
 
-class PhotoService extends AbstractHttpRequest
+class PhotoService
 {
+    protected HttpRequest $client;
+
     public function __construct() {
-        $this->http = Http::photo();
+        $this->client = new HttpRequest(Http::photo());
     }
 
     public function getPhotosOfProducts(array $productIds)
     {
-        // $responses = Http::pool(fn ($pool) => collect($productIds)->each(function ($productId) use ($pool) {
-        //     $pool->get(config("services.ms_photo.api_base_url") . "photos?product_id={$productId}", [
-        //         'headers' => [
-        //             'Accept' => 'application/json',
-        //         ],
-        //     ]);
-        // }));
-
-        // foreach ($productIds as $index => $productId) {
-        //     $photos[$productId] = $responses[$index]->json();
-        // }
-
-        $response = $this->http->send(
+        $response = $this->client->send(
             method:'POST',
-            url:'/photos/batch-loading',
+            uri:'/photos/batch-loading',
             options: [
                 'json' => [
                     'product_ids' => $productIds
@@ -35,16 +25,16 @@ class PhotoService extends AbstractHttpRequest
             ],
         );
 
-        $photos = $response->json();
+        $photos = $response;
 
         return $photos;
     }
 
     public function getPhotosOfProduct(string $productId)
     {
-        $response = $this->http->send(
+        $response = $this->client->send(
             method:'GET',
-            url:"/photos?product_id={$productId}",
+            uri:"/photos?product_id={$productId}",
         );
 
         $photos = $response->json();

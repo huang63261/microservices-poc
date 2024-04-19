@@ -2,35 +2,37 @@
 
 namespace App\Services;
 
-use App\Services\Http\AbstractHttpRequest;
+use App\Services\Http\HttpRequest;
 use Illuminate\Support\Facades\Http;
 
-class ReviewService extends AbstractHttpRequest
+class ReviewService
 {
+    protected HttpRequest $client;
+
     public function __construct() {
-        $this->http = Http::review();
+        $this->client = new HttpRequest(Http::review());
     }
 
     public function getReviewsOfProducts(array $productIds)
     {
-        $reviews = $this->http->send(
+        $reviews = $this->client->send(
             method:'POST',
-            url:'/product-reviews/batch-loading',
+            uri:'/product-reviews/batch-loading',
             options: [
                 'json' => [
                     'product_ids' => $productIds
                 ]
             ]
-        )->json();
+        );
 
         return $reviews;
     }
 
     public function getReviewsOfProduct(string $productId)
     {
-        $reviews = $this->http->send(
+        $reviews = $this->client->send(
             method:'GET',
-            url:"/product-reviews?product_id={$productId}",
+            uri:"/product-reviews?product_id={$productId}",
         )->json();
 
         return $reviews;
