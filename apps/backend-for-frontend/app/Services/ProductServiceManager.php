@@ -19,7 +19,7 @@ class ProductServiceManager
     {
         $products = $this->productService->getAll(queryParams: $queryParams);
 
-        if (!$products['data']) {
+        if (isset($prodcuts['data']) && empty($products['data'])) {
             throw new \Exception(json_encode(['message' => 'Products not found']), Response::HTTP_NOT_FOUND);
         }
 
@@ -38,7 +38,6 @@ class ProductServiceManager
         }
 
         return new ProductCollection($products);
-
     }
 
     /**

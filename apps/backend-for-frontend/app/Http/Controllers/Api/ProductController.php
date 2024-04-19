@@ -23,9 +23,17 @@ class ProductController extends Controller
             return $this->productServiceManager
                 ->getAllProducts($request->all());
         } catch (\Exception $e) {
+            $errorMessage = $e->getMessage();
+            $decodedMessage = json_decode($errorMessage);
+            if ($decodedMessage !== null) {
+                $message = $decodedMessage;
+            } else {
+                $message = ['message' => $errorMessage];
+            }
+
             return response()->json(
-                json_decode($e->getMessage())
-                , $e->getCode()
+                $message
+                , $e->getCode() == 0 ? Response::HTTP_OK : $e->getCode()
             );
         }
     }
@@ -47,10 +55,18 @@ class ProductController extends Controller
             return $this->productServiceManager
                 ->getProductsConcurrently($id);
         } catch (\Exception $e) {
-            return response()->json([
-                'code' => $e->getCode(),
-                'message' => json_decode($e->getMessage())
-            ], $e->getCode());
+            $errorMessage = $e->getMessage();
+            $decodedMessage = json_decode($errorMessage);
+            if ($decodedMessage !== null) {
+                $message = $decodedMessage;
+            } else {
+                $message = ['message' => $errorMessage];
+            }
+
+            return response()->json(
+                $message
+                , $e->getCode() == 0 ? Response::HTTP_OK : $e->getCode()
+            );
         }
     }
 
