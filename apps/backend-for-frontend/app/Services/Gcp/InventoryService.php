@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Gcp;
 
 use App\Services\Contracts\InventoryService as InvetoryServiceContract;
-use App\Services\Http\HttpRequest;
-use Illuminate\Support\Facades\Http;
+use App\Services\Http\GoogleCloudApiRequest;
 
 class InventoryService implements InvetoryServiceContract
 {
     public function __construct(
-        protected HttpRequest $client
+        protected GoogleCloudApiRequest $client
     ) {}
 
     public function getInventoryOfProducts(array $productIds = []): array
     {
         return $this->client->send(
             method:'POST',
-            uri:'/inventories/batch-loading',
+            uri:'/api/inventories/batch-loading',
             options: [
                 'json' => [
                     'product_ids' => $productIds,
@@ -29,7 +28,7 @@ class InventoryService implements InvetoryServiceContract
     {
         return $this->client->send(
             method:'GET',
-            uri:"/inventories/{$productId}",
+            uri:"/api/inventories/{$productId}",
         );
     }
 }

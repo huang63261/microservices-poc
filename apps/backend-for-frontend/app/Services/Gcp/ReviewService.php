@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Gcp;
 
 use App\Services\Contracts\ReviewService as ReviewServiceContract;
-use App\Services\Http\HttpRequest;
-use Illuminate\Support\Facades\Http;
+use App\Services\Http\GoogleCloudApiRequest;
 
 class ReviewService implements ReviewServiceContract
 {
     public function __construct(
-        protected HttpRequest $client
+        protected GoogleCloudApiRequest $client
     ) {}
 
     public function getReviewsOfProducts(array $productIds): array
     {
         return $this->client->send(
             method:'POST',
-            uri:'/product-reviews/batch-loading',
+            uri:'/api/product-reviews/batch-loading',
             options: [
                 'json' => [
                     'product_ids' => $productIds
@@ -29,7 +28,7 @@ class ReviewService implements ReviewServiceContract
     {
         return $this->client->send(
             method:'GET',
-            uri:"/product-reviews?product_id={$productId}",
+            uri:"/api/product-reviews?product_id={$productId}",
         );
     }
 }

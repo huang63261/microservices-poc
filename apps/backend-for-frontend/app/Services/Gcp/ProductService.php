@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Gcp;
 
 use App\Services\Contracts\ProductService as ProductServiceContract;
-use App\Services\Http\HttpRequest;
-use Illuminate\Support\Facades\Http;
+use App\Services\Http\GoogleCloudApiRequest;
 
 class ProductService implements ProductServiceContract
 {
     public function __construct(
-        protected HttpRequest $client
+        protected GoogleCloudApiRequest $client
     ) {}
 
     public function getAll(array $queryParams = []): array
     {
         return $this->client->send(
             method:'GET',
-            uri:'/products-browse',
+            uri:'/api/products-browse',
             options: [
                 'query' => $queryParams,
             ]
@@ -27,7 +26,7 @@ class ProductService implements ProductServiceContract
     {
         return $this->client->send(
             method:'GET',
-            uri:"/products/{$productId}",
+            uri:"/api/products/{$productId}",
         );
     }
 }

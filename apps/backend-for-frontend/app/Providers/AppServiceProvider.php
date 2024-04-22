@@ -20,19 +20,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Http::macro('product', function () {
+        Http::macro('ms_product', function () {
             return Http::baseUrl(config('services.ms_product.api_base_url'));
         });
 
-        Http::macro('review', function () {
+        Http::macro('ms_review', function () {
             return Http::baseUrl(config('services.ms_review.api_base_url'));
         });
 
-        Http::macro('photo', function () {
+        Http::macro('ms_photo', function () {
             return Http::baseUrl(config('services.ms_photo.api_base_url'));
         });
 
-        Http::macro('inventory', function () {
+        Http::macro('ms_inventory', function () {
             return Http::baseUrl(config('services.ms_inventory.api_base_url'));
         });
     }

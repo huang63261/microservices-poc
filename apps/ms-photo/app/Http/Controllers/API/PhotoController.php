@@ -48,8 +48,9 @@ class PhotoController extends Controller
             'product_ids.*' => 'integer'
         ]);
 
-        $photos = $this->photoRepository->findByProductIds($request->input('product_ids'));
-        $photos = collect($photos)->groupBy('product_id')->toArray();
+        $photos = collect($this->photoRepository->findByProductIds($request->input('product_ids')) ?? [])
+            ->groupBy('product_id')
+            ->toArray();
 
         return response()->json($photos, Response::HTTP_OK);
     }
@@ -65,6 +66,7 @@ class PhotoController extends Controller
         ]);
 
         try {
+            // Set a Google Cloud Storage class for production environment
             $path = $this->storageService->store($request->file('photo'), 'photos');
             $photoData = [
                 'product_id' => $request->product_id,

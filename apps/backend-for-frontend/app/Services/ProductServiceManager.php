@@ -3,6 +3,12 @@
 namespace App\Services;
 
 use App\Http\Resources\ProductCollection;
+use App\Services\Contracts\InventoryService;
+use App\Services\Contracts\PhotoService;
+use App\Services\Contracts\ProductService;
+use App\Services\Contracts\ReviewService;
+use Google\Auth\ApplicationDefaultCredentials;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 
@@ -66,10 +72,6 @@ class ProductServiceManager
      */
     public function getProductsConcurrently(string $productId)
     {
-        $headers = [
-            'Accept' => 'application/json',
-        ];
-
         $product = $this->productService->getOne($productId);
 
         if (!$product['data']) {
@@ -77,9 +79,15 @@ class ProductServiceManager
         }
 
         $response = Http::pool(fn ($pool) => [
-            $pool->as('reviews')->withHeaders($headers)->get(config('services.ms_review.api_base_url') . "/product-reviews?product_id={$productId}"),
-            $pool->as('photos')->withHeaders($headers)->get(config('services.ms_photo.api_base_url') . "/photos?product_id={$productId}"),
-            $pool->as('inventory')->withHeaders($headers)->get(config('services.ms_inventory.api_base_url') . "/inventories/{$productId}"),
+            $pool->as('reviews')
+                ->withHeaders($this->getHeaders('ms_review'))
+                ->get(config('services.ms_review.api_base_url') . "product-reviews?product_id={$productId}"),
+            $pool->as('photos')
+                ->withHeaders($this->getHeaders('ms_photo'))
+                ->get(config('services.ms_photo.api_base_url') . "photos?product_id={$productId}"),
+            $pool->as('inventory')
+                ->withHeaders($this->getHeaders('ms_inventory'))
+                ->get(config('services.ms_inventory.api_base_url') . "inventories/{$productId}"),
         ]);
 
         $product['data']['reviews'] = $response['reviews']->ok() ? $response['reviews']->json() : [];
@@ -87,5 +95,34 @@ class ProductServiceManager
         $product['data']['inventory'] = $response['inventory']->ok() ? $response['inventory']->json() : [];
 
         return $product;
+    }
+
+    /**
+     * Get headers for the request
+     *  - If the environment is production, get the id token from the Application Default Credentials
+     *
+     * @param string $service
+     * @return array
+     */
+    private function getHeaders(string $service)
+    {
+        if (app()->environment('production')) {
+            try {
+                $targetAudience = config("services.{$service}.base_url");
+                $credentials = ApplicationDefaultCredentials::getCredentials($targetAudience);
+                $idToken = $credentials->fetchAuthToken()['id_token'];
+
+                return [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer ' . $idToken,
+                ];
+            } catch (\Exception $e) {
+                throw new \Exception(json_encode(['message' => $e->getMessage()]), Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return [
+                'Accept' => 'application/json',
+            ];
+        }
     }
 }
