@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Gcp;
 
 use App\Services\Contracts\PhotoService as PhotoServiceContract;
-use App\Services\Http\HttpRequest;
-use Illuminate\Support\Facades\Http;
+use App\Services\Http\GoogleCloudApiRequest;
 
 class PhotoService implements PhotoServiceContract
 {
     public function __construct(
-        protected HttpRequest $client
+        protected GoogleCloudApiRequest $client
     ) {}
 
     public function getPhotosOfProducts(array $productIds): array
     {
         return $this->client->send(
             method:'POST',
-            uri:'/photos/batch-loading',
+            uri:'/api/photos/batch-loading',
             options: [
                 'json' => [
                     'product_ids' => $productIds
@@ -29,7 +28,7 @@ class PhotoService implements PhotoServiceContract
     {
         return $this->client->send(
             method:'GET',
-            uri:"/photos?product_id={$productId}",
+            uri:"/api/photos?product_id={$productId}",
         );
     }
 }
