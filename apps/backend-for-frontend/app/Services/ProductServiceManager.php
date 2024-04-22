@@ -81,13 +81,13 @@ class ProductServiceManager
         $response = Http::pool(fn ($pool) => [
             $pool->as('reviews')
                 ->withHeaders($this->getHeaders('ms_review'))
-                ->get(config('services.ms_review.api_base_url') . "product-reviews?product_id={$productId}"),
+                ->get(config('services.ms_review.api_base_url') . "/product-reviews?product_id={$productId}"),
             $pool->as('photos')
                 ->withHeaders($this->getHeaders('ms_photo'))
-                ->get(config('services.ms_photo.api_base_url') . "photos?product_id={$productId}"),
+                ->get(config('services.ms_photo.api_base_url') . "/photos?product_id={$productId}"),
             $pool->as('inventory')
                 ->withHeaders($this->getHeaders('ms_inventory'))
-                ->get(config('services.ms_inventory.api_base_url') . "inventories/{$productId}"),
+                ->get(config('services.ms_inventory.api_base_url') . "/inventories/{$productId}"),
         ]);
 
         $product['data']['reviews'] = $response['reviews']->ok() ? $response['reviews']->json() : [];

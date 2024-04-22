@@ -21,9 +21,9 @@ class MicroservicesServiceProvider extends ServiceProvider
     {
         foreach ($this->services as $service => $configKey) {
             $this->app->bind("App\Services\Contracts\\{$service}", function () use ($configKey, $service) {
-                $apiBaseUrl = config("services.{$configKey}.api_base_url");
+                $baseUrl = config("services.{$configKey}.base_url");
                 $httpRequest = env('APP_ENV') === 'production'
-                    ? new \App\Services\Http\GoogleCloudApiRequest($apiBaseUrl)
+                    ? new \App\Services\Http\GoogleCloudApiRequest($baseUrl)
                     : new \App\Services\Http\HttpRequest(Http::{$configKey}());
 
                 $serviceClass = env('APP_ENV') === 'production'

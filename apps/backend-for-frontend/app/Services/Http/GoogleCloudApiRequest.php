@@ -5,7 +5,6 @@ namespace App\Services\Http;
 use Google\Auth\ApplicationDefaultCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 
