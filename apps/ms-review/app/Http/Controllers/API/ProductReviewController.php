@@ -41,8 +41,9 @@ class ProductReviewController extends Controller
             'product_ids.*' => 'integer',
         ]);
 
-        $productReviews = $this->productReviewRepository->findByProductIds($request->input('product_ids'));
-        $productReviews = collect($productReviews)->groupBy('product_id')->toArray();
+        $productReviews = collect($this->productReviewRepository->findByProductIds($request->input('product_ids')) ?? [])
+            ->groupBy('product_id')
+            ->toArray();
 
         ksort($productReviews);
 
