@@ -7,7 +7,6 @@ use App\Http\Resources\OrderDetailResource;
 use App\Models\OrderDetail;
 use App\Repositories\OrderDetailRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class OrderDetailController extends Controller
 {
