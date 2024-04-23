@@ -36,8 +36,9 @@ class InventoryService
                 $requiredQuantity = $item['quantity'];
 
                 // Check if the product has any inventory
-                if ($inventories[$productId] === null || empty($inventories[$productId])) {
-                    $insufficientCollect[] = "Product ID: {$productId} doen't have any inventory.";
+                if (!isset($inventories[$productId]) || empty($inventories[$productId])) {
+                    $insufficientCollect[] = "Product ID: {$productId} doesn't have any inventory.";
+                    continue;
                 };
 
                 // Check if the product has enough quantity
@@ -45,6 +46,7 @@ class InventoryService
 
                 if ($inventory['available_quantity'] < $requiredQuantity) {
                     $insufficientCollect[] = "Product ID: {$productId} is insufficient. Available Quantity: {$inventory['available_quantity']}";
+                    continue;
                 }
             }
 
