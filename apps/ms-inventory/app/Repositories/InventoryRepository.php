@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\Inventory;
-use Illuminate\Support\Facades\DB;
 
 class InventoryRepository
 {
@@ -58,13 +57,43 @@ class InventoryRepository
     public function lockInventory(string $productId, int $quantity)
     {
         try {
-            $this->inventory->where('product_id', $productId)
-                ->firstOrFail()
-                ->decrement('available_quantity', $quantity);
+            $inventory = $this->inventory->where('product_id', $productId)
+                ->firstOrFail();
 
-            $this->inventory->where('product_id', $productId)
-                ->firstOrFail()
-                ->increment('locked_quantity', $quantity);
+            $inventory->decrement('available_quantity', $quantity);
+            $inventory->increment('locked_quantity', $quantity);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function unlockInventory(string $productId, int $quantity)
+    {
+        try {
+            $inventory = $this->inventory->where('product_id', $productId)
+                ->firstOrFail();
+
+            $inventory->increment('available_quantity', $quantity);
+            $inventory->decrement('locked_quantity', $quantity);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function deductInventory(string $productId, int $quantity)
+    {
+        try {
+            $inventory = $this->inventory
+                ->where('product_id', $productId)
+                ->firstOrFail();
+
+            if ($inventory->locked_quantity < $quantity
+                || $inventory->total_quantity < $quantity) {
+                throw new \Exception('Insufficient quantity.');
+            }
+
+            $inventory->decrement('locked_quantity', $quantity);
+            $inventory->decrement('total_quantity', $quantity);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

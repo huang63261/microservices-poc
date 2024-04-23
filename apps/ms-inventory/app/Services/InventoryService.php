@@ -99,4 +99,64 @@ class InventoryService
 
         return $response;
     }
+
+    public function unlockInventory(array $items)
+    {
+        try {
+            $response = [
+                'is_unlocked' => 1,
+                'detail' => 'Successfully unlocked the inventory.'
+            ];
+
+            DB::beginTransaction();
+
+            foreach ($items as $item) {
+                $productId = $item['product_id'];
+                $quantity = $item['quantity'];
+
+                $this->inventoryRepository->unlockInventory($productId, $quantity);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'is_unlocked' => 0,
+                'detail' => $e->getMessage(),
+            ];
+        }
+
+        return $response;
+    }
+
+    public function deductInventory(array $items)
+    {
+        try {
+            $response = [
+                'is_deducted' => 1,
+                'detail' => 'Successfully deducted the inventory.'
+            ];
+
+            DB::beginTransaction();
+
+            foreach ($items as $item) {
+                $productId = $item['product_id'];
+                $quantity = $item['quantity'];
+
+                $this->inventoryRepository->deductInventory($productId, $quantity);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'is_deducted' => 0,
+                'detail' => $e->getMessage(),
+            ];
+        }
+
+        return $response;
+    }
 }

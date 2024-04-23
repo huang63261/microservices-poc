@@ -21,7 +21,9 @@ Route::prefix('/inventories')->group(function() {
     Route::put('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'update'])->name('inventories.update');
     Route::delete('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'destroy'])->name('inventories.destroy');
 
-    Route::post('/lock', [\App\Http\Controllers\Api\InventoryLockController::class, 'lock'])->name('inventories.lock');
+    Route::post('/lock', [\App\Http\Controllers\Api\InventoryQuantityController::class, 'lock'])->name('inventories.lock');
+    Route::post('/unlock', [\App\Http\Controllers\Api\InventoryQuantityController::class, 'unlock'])->name('inventories.unlock');
+    Route::post('/deduct', [\App\Http\Controllers\Api\InventoryQuantityController::class, 'deduct'])->name('inventories.deduct');
 });
 
 Route::post('inventories/check-availability', [\App\Http\Controllers\Api\InventoryCheckController::class, 'checkAvailability'])
