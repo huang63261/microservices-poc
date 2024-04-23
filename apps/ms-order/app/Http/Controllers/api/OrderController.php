@@ -9,7 +9,6 @@ use App\Repositories\OrderRepository;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -78,6 +77,23 @@ class OrderController extends Controller
         if (!$order) {
             return response()->json([
                 'message' => 'Update failed'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return new OrderResource($order);
+    }
+
+    public function cancel(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+        ]);
+
+        $order = $this->orderService->cancelOrder($request->input('order_id'));
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Cancel failed'
             ], Response::HTTP_NOT_FOUND);
         }
 

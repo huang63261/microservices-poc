@@ -46,4 +46,9 @@ class OrderService
 
         return $order;
     }
+
+    public function cancelOrder(int $orderId)
+    {
+        return $this->orderRepository->update($orderId, ['status' => 3]);
+    }
 }

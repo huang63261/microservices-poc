@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('orders', \App\Http\Controllers\Api\OrderController::class)
-    ->only(['index', 'store', 'show', 'update', 'destroy']);
+Route::get('orders', [\App\Http\Controllers\Api\OrderController::class, 'index'])->name('orders.index');
+Route::post('orders', [\App\Http\Controllers\Api\OrderController::class, 'store'])->name('orders.store');
+Route::get('orders/{order}', [\App\Http\Controllers\Api\OrderController::class, 'show'])->name('orders.show');
+Route::put('orders/{order}', [\App\Http\Controllers\Api\OrderController::class, 'update'])->name('orders.update');
+Route::delete('orders/{order}', [\App\Http\Controllers\Api\OrderController::class, 'destroy'])->name('orders.destroy');
+Route::post('orders/cancel', [\App\Http\Controllers\Api\OrderController::class, 'cancel'])->name('orders.cancel');
 
 Route::resource('order-details', \App\Http\Controllers\Api\OrderDetailController::class)
     ->only(['index', 'show']);
