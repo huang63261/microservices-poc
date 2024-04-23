@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,9 +20,9 @@ Route::prefix('/inventories')->group(function() {
     Route::post('/', [\App\Http\Controllers\Api\InventoryController::class, 'store'])->name('inventories.store');
     Route::put('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'update'])->name('inventories.update');
     Route::delete('/{inventory}', [\App\Http\Controllers\Api\InventoryController::class, 'destroy'])->name('inventories.destroy');
+
+    Route::post('/lock', [\App\Http\Controllers\Api\InventoryLockController::class, 'lock'])->name('inventories.lock');
 });
 
 Route::post('inventories/check-availability', [\App\Http\Controllers\Api\InventoryCheckController::class, 'checkAvailability'])
     ->name('inventories.check-availability');
-
-Route::get('/test', [\App\Http\Controllers\Api\TestController::class, 'index']);
