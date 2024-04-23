@@ -58,17 +58,14 @@ class InventoryRepository
     public function lockInventory(string $productId, int $quantity)
     {
         try {
-            DB::beginTransaction();
-
             $this->inventory->where('product_id', $productId)
+                ->firstOrFail()
                 ->decrement('available_quantity', $quantity);
 
             $this->inventory->where('product_id', $productId)
+                ->firstOrFail()
                 ->increment('locked_quantity', $quantity);
-
-            DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
             throw new \Exception($e->getMessage());
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\InventoryRepository;
+use Illuminate\Support\Facades\DB;
 
 class InventoryService
 {
@@ -37,7 +38,7 @@ class InventoryService
 
                 // Check if the product has any inventory
                 if (!isset($inventories[$productId]) || empty($inventories[$productId])) {
-                    $insufficientCollect[] = "Product ID: {$productId} doesn't have any inventory.";
+                    $insufficientCollect[] = "Product ID: {$productId} Not in stock.";
                     continue;
                 };
 
@@ -71,11 +72,31 @@ class InventoryService
      */
     public function lockInventory(array $items)
     {
-        foreach ($items as $item) {
-            $productId = $item['product_id'];
-            $quantity = $item['quantity'];
+        try {
+            $response = [
+                'is_locked' => 1,
+                'detail' => 'Successfully locked the inventory.'
+            ];
 
-            $this->inventoryRepository->lockInventory($productId, $quantity);
+            DB::beginTransaction();
+
+            foreach ($items as $item) {
+                $productId = $item['product_id'];
+                $quantity = $item['quantity'];
+
+                $this->inventoryRepository->lockInventory($productId, $quantity);
+            }
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'is_locked' => 0,
+                'detail' => $e->getMessage(),
+            ];
         }
+
+        return $response;
     }
 }
