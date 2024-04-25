@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/mail', [\App\Http\Controllers\Api\MailController::class, 'mail'])->name('mail');
+Route::post('/pubsub/push', [\App\Http\Controllers\Api\MailController::class, 'handlePubSubPush'])->name('pubsub.push');
