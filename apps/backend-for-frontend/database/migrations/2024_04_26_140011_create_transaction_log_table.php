@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transaction_log', function (Blueprint $table) {
-            $table->string('transaction_uuid')->primary();
+            $table->id('id');
+            $table->string('transaction_uuid');
             $table->string('service_identifier');
             $table->string('order_id')->nullable();
             $table->enum('action', ['order.create', 'order.approve', 'inventory.lock', 'inventory.unlock', 'inventory.deduct', 'payment.capture', 'payment.refund']);

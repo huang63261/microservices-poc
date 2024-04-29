@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constant\TransactionAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
@@ -17,7 +18,7 @@ class OrderController extends Controller
         protected OrderRepository $orderRepository,
         protected OrderService $orderService
     ) {
-        $this->middleware('idempotency')->only('store', 'update');
+        $this->middleware('idempotency')->only('store', 'cancel');
     }
 
     /**
@@ -40,27 +41,27 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'customer_id' => 'required|integer',
+            'total_price' => 'required|numeric',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|integer',
+            'items.*.product_name' => 'required|string',
+            'items.*.quantity' => 'required|integer',
+            'items.*.price' => 'required|numeric',
+        ]);
+
         $transactionLog = TransactionLog::create([
             'transaction_uuid' => $request->header('transaction-uuid'),
             'service_identifier' => 'order',
             'order_id' => null,
-            'action' => 'order.create',
+            'action' => TransactionAction::ORDER_CREATE,
             'status' => 'pending',
             'detail' => json_encode($request->all()),
         ]);
 
         try {
-            $order = $this->orderService->createOrder(
-                $request->validate([
-                    'customer_id' => 'required|integer',
-                    'total_price' => 'required|numeric',
-                    'items' => 'required|array',
-                    'items.*.product_id' => 'required|integer',
-                    'items.*.product_name' => 'required|string',
-                    'items.*.quantity' => 'required|integer',
-                    'items.*.price' => 'required|numeric',
-                ])
-            );
+            $order = $this->orderService->createOrder($request->all());
         } catch (\Exception $e) {
             $transactionLog->update([
                 'status' => 'failed',
@@ -115,13 +116,35 @@ class OrderController extends Controller
             'order_id' => 'required|integer',
         ]);
 
-        $order = $this->orderService->cancelOrder($request->input('order_id'));
+        $transactionLog = TransactionLog::create([
+            'transaction_uuid' => $request->header('transaction-uuid'),
+            'service_identifier' => 'order',
+            'order_id' => $request->input('order_id'),
+            'action' => TransactionAction::ORDER_CANCEL,
+            'status' => 'pending',
+            'detail' => json_encode($request->all()),
+        ]);
+
+        try {
+            $order = $this->orderService->cancelOrder($request->input('order_id'));
+        } catch (\Exception $e) {
+            $transactionLog->update([
+                'status' => 'failed',
+                'detail' => $e->getMessage(),
+            ]);
+
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
 
         if (!$order) {
             return response()->json([
                 'message' => 'Cancel failed'
             ], Response::HTTP_NOT_FOUND);
         }
+
+        $transactionLog->update([
+            'status' => 'completed',
+        ]);
 
         return new OrderResource($order);
     }
