@@ -11,9 +11,7 @@ class InventoryCheckController extends Controller
 {
     public function __construct(
         protected InventoryService $inventoryService
-    ) {
-        $this->middleware('idempotency')->only('checkAvailability');
-    }
+    ) {}
 
     public function checkAvailability(Request $request)
     {

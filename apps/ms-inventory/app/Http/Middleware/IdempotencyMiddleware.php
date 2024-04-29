@@ -33,9 +33,6 @@ class IdempotencyMiddleware
     protected function isDuplicate($transactionUUID, $action)
     {
         switch ($action) {
-            case TransactionAction::INVENTORY_CHECK:
-                return $this->isInventoryCheckDuplicate($transactionUUID);
-                break;
             case TransactionAction::INVENTORY_LOCK:
                 return $this->isInventoryLockDuplicate($transactionUUID);
                 break;
@@ -49,15 +46,6 @@ class IdempotencyMiddleware
                 return false;
                 break;
         }
-    }
-
-    protected function isInventoryCheckDuplicate($transactionUUID)
-    {
-        return TransactionLog::where('transaction_uuid', $transactionUUID)
-            ->where('action', TransactionAction::INVENTORY_CHECK)
-            ->whereIn('status', ['completed', 'pending'])
-            ->where('service_identifier', 'inventory')
-            ->exists();
     }
 
     protected function isInventoryLockDuplicate($transactionUUID)
