@@ -8,6 +8,11 @@ use Illuminate\Http\Response;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('idempotency')->only(['payment', 'refund']);
+    }
+
     public function payment(Request $request)
     {
         $request->validate([
