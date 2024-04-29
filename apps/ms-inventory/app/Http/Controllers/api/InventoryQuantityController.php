@@ -10,7 +10,9 @@ class InventoryQuantityController extends Controller
 {
     public function __construct(
         protected InventoryService $inventoryService
-    ) {}
+    ) {
+        $this->middleware('idempotency')->only('lock', 'unlock', 'deduct');
+    }
 
     /**
      * Lock the inventory.

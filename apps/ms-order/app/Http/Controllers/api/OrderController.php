@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\TransactionLog;
 use App\Repositories\OrderRepository;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -15,7 +16,9 @@ class OrderController extends Controller
     public function __construct(
         protected OrderRepository $orderRepository,
         protected OrderService $orderService
-    ) {}
+    ) {
+        $this->middleware('idempotency')->only('store', 'update');
+    }
 
     /**
      * Display a listing of the resource.
@@ -37,8 +40,17 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        return new OrderResource(
-            $this->orderService->createOrder(
+        $transactionLog = TransactionLog::create([
+            'transaction_uuid' => $request->header('transaction-uuid'),
+            'service_identifier' => 'order',
+            'order_id' => null,
+            'action' => 'order.create',
+            'status' => 'pending',
+            'detail' => json_encode($request->all()),
+        ]);
+
+        try {
+            $order = $this->orderService->createOrder(
                 $request->validate([
                     'customer_id' => 'required|integer',
                     'total_price' => 'required|numeric',
@@ -48,8 +60,22 @@ class OrderController extends Controller
                     'items.*.quantity' => 'required|integer',
                     'items.*.price' => 'required|numeric',
                 ])
-            )
-        );
+            );
+        } catch (\Exception $e) {
+            $transactionLog->update([
+                'status' => 'failed',
+                'detail' => $e->getMessage(),
+            ]);
+
+            return response()->json(['message' => 'Failed to create order'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $transactionLog->update([
+            'order_id' => $order->id,
+            'status' => 'completed',
+        ]);
+
+        return new OrderResource($order);
     }
 
     /**
