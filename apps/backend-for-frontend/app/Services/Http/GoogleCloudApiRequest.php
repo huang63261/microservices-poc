@@ -22,7 +22,6 @@ class GoogleCloudApiRequest
         $this->client = new Client([
             'handler' => $stack,
             'auth' => 'google_auth',
-            // Cloud Run, IAP, or custom resource URL
             'base_uri' => $targetAudience,
         ]);
     }
