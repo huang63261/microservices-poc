@@ -4,6 +4,8 @@
 
 This is a proof of concept for a microservice-based E-Shopping application. The application is designed to demonstrate the practical use of microservices.
 
+For more information, please check out this link: [Microservices POC Documentation](https://hackmd.io/@harveyhuang/ryA5QGfzC)
+
 ## Features
 
 - Product browsing
@@ -51,7 +53,7 @@ This is a proof of concept for a microservice-based E-Shopping application. The 
 
 ## Testing
 
-1. Navigate to a service directory and run the command:
+1. Navigate to one single service directory and run the command:
 
    ```shell
    php artisan test
